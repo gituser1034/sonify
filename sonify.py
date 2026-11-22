@@ -1,21 +1,19 @@
-# Run venv - as of now don't need the venv as not using any sound library
+# Create venv:
 # python3 -m venv .venv
 # source .venv/bin/activate
-# pip install opencv-python numpy scipy sounddevice (older)
+# pip install opencv-python numpy scipy sounddevice
+# sudo apt update
+# sudo apt install libportaudio2 portaudio19-dev (this needed for sounddevice library)
 # deactivate
 
 # Gonna try note conversion in regular python, no libraries
 
 import cv2 as cv
 import numpy as np
+import scipy.io.wavfile as wave
+import scipy.signal as signal
 
-# Gemini saying sounddevice for real time playback
-# I think either scipy or soundfile for creating full on audio output files
-
-# Chatgpt saying this about making a function to control everything between the darkest and
-# brightest pixels
-# You only have to decide two bounds—what 0 (black) maps to and what 255 (white)
-# maps to—and how the numbers in between behave.
+# Scipy creates wav files, sounddevice allows audio playback within program (may not need)
 
 # Load in an image with opencv
 path = "pillars.jpg"
@@ -47,6 +45,17 @@ pitches_rev = pitches[::-1]
 # just normalize each pixel from 0 - 1, 255 mapped to 1 so divide everything by 255 
 # (255 / 255 = 1)
 volume = grayImg / 255
+
+# Now I have a pitch array, and a volume 2D array
+# Somehow combining the pitch and volume per column
+# For each element in a column will have a wave, add all these waves together
+# so a column has one combined wave
+# Do this for each column
+# Should have a final 1D arr of these wave values
+# Can output this to a .wav file and play the audio
+
+# 44,100 Hz, Default sample rate common for audio
+sample_rate = 44100
 
 # Time, left to right?
 
