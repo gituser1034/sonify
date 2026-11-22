@@ -25,38 +25,32 @@ img = cv.imread(path)
 # This is a 2D arr of pixel intensities
 grayImg = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
+# (860, 864) - Height x Width
 shape = grayImg.shape
 # Vertical position/height = which row you're on, 0 = top row of image
 height = shape[0]
 width = shape[1]
 
-# Pitch mapping
-
-# MIDI nummbers are the numerical value to letter keys like C# or something
-# Piano range (21–108): A standard 88-key piano starts at MIDI number 21 (the lowest A) and ends 
-# at 108 (the highest C). Middle C (C4) is 60. You convert names to MIDI numbers because computers 
-# and audio libraries prefer working with clean integers like 60 rather than text strings like "C4".
-
-# using the whole piano doesn't allow a good split like using a few octaves of c major
-# c major is c to another c, only white keys, sounds best to me for this
-# A picture is large, many vertical positions ie 500, 0,1,2 is just noise, can map to the 
-# same pitch, need to divide the pitches to cover the whole range
-
 # pitch = vertical location, higher up = higher pitch
-# pixel intensity (0-255) = volume
+# volume = pixel intensity (0-255)
 # Time = left to right
 
-# Choosing notes = choosing pitch, maps to pixel location
-# Starting with C major, 3 octaves, C2 to B4
-# MIDI number for C2 = 36 (low), B4 = 56 (high)
-notes = ['C2', 'D2', 'E2', 'F2', 'G2', 'A2', 'B2', 
-         'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 
-         'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4']
+# Testing straight up frequencies first - 150 hz to 4186 (then gonna try 3000 and adjust so its comfortable)
 
-# Need to normalize vertical pixel locations to 36 - 56 scale.
+# Generate an array from 150hz to 4186hz, logarithmic scale (hearing is logarithmic, smooth pitch scaling)
+# the same length as the original image 
+pitches = np.geomspace(150, 4186, num=height)
+# Reverse as top of image is row 0
+pitches_rev = pitches[::-1]
 
-# Testing straight up frequencies first
+# Map pixel intensity to volume - volume works with amplitdue from 0-1
+# just normalize each pixel from 0 - 1, 255 mapped to 1 so divide everything by 255 
+# (255 / 255 = 1)
+volume = grayImg / 255
 
+# Time, left to right?
+
+# playback for actual sound?????
 
 # Show image
 # Pass in name of window and the image matrix
